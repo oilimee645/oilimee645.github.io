@@ -122,9 +122,9 @@ a:hover{color:var(--color-accent-200)}
   <div style="position:absolute; inset:-40% -10% auto auto; width:70vw; height:120%; background:radial-gradient(closest-side, var(--color-section-glow), transparent); pointer-events:none"></div>
   <div style="position:relative; max-width:1360px; margin:0 auto; padding:clamp(56px,8vw,112px) clamp(20px,5vw,64px); display:grid; grid-template-columns:repeat(auto-fit, minmax(170px,1fr)); gap:clamp(28px,4vw,48px) 24px">
     <div data-reveal="fade" data-delay="0"><div data-count="6" style="font-size:clamp(52px,7vw,100px); font-weight:500; letter-spacing:-.05em; line-height:1">6</div><div style="margin-top:10px; font-size:14px; color:var(--color-accent-200)">{{ t.s0 }}</div></div>
-    <div data-reveal="fade" data-delay="80"><div data-count="289" data-suffix="K" style="font-size:clamp(52px,7vw,100px); font-weight:500; letter-spacing:-.05em; line-height:1">289K</div><div style="margin-top:10px; font-size:14px; color:var(--color-accent-200)">{{ t.s1 }}</div></div>
-    <div data-reveal="fade" data-delay="160"><div data-count="277" style="font-size:clamp(52px,7vw,100px); font-weight:500; letter-spacing:-.05em; line-height:1">277</div><div style="margin-top:10px; font-size:14px; color:var(--color-accent-200)">{{ t.s2 }}</div></div>
-    <div data-reveal="fade" data-delay="240"><div data-count="622" style="font-size:clamp(52px,7vw,100px); font-weight:500; letter-spacing:-.05em; line-height:1">622</div><div style="margin-top:10px; font-size:14px; color:var(--color-accent-200)">{{ t.s3 }}</div></div>
+    <div data-reveal="fade" data-delay="80"><div data-count="2" style="font-size:clamp(52px,7vw,100px); font-weight:500; letter-spacing:-.05em; line-height:1">2</div><div style="margin-top:10px; font-size:14px; color:var(--color-accent-200)">{{ t.s1 }}</div></div>
+    <div data-reveal="fade" data-delay="160"><div data-count="3" style="font-size:clamp(52px,7vw,100px); font-weight:500; letter-spacing:-.05em; line-height:1">3</div><div style="margin-top:10px; font-size:14px; color:var(--color-accent-200)">{{ t.s2 }}</div></div>
+    <div data-reveal="fade" data-delay="240"><div data-count="6" style="font-size:clamp(52px,7vw,100px); font-weight:500; letter-spacing:-.05em; line-height:1">6</div><div style="margin-top:10px; font-size:14px; color:var(--color-accent-200)">{{ t.s3 }}</div></div>
     <div data-reveal="fade" data-delay="320"><div data-count="1" data-prefix="#" style="font-size:clamp(52px,7vw,100px); font-weight:500; letter-spacing:-.05em; line-height:1">#1</div><div style="margin-top:10px; font-size:14px; color:var(--color-accent-200)">{{ t.s4 }}</div></div>
   </div>
 </section>
@@ -312,24 +312,24 @@ a:hover{color:var(--color-accent-200)}
 const CODE = `import PassKit
 
 actor SecureClient {
-  private let pinning = CertificatePinning(certs: 16)
+  private let pinning = CertificatePinning(.pinned)
   private let cache = TTLCache<Endpoint, Data>(ttl: .minutes(5))
 
   func send<T: Decodable>(_ e: Endpoint) async throws -> T {
     try await client
-      .encrypt(.rsa, renegotiate: true)
+      .encrypt()
       .dedup(inFlight: e)
-      .request(e)   // 277 endpoints, one source of truth
+      .request(e)   // one source of truth
   }
 }`;
 
 const TERM = [
-  ['$', "docker ps --format '{{.Names}}'"],
-  ['', 'cloudflared  n8n  ollama  profile-web  truenas-apps'],
+  ['$', 'swift build -c release'],
+  ['', 'Build complete!'],
   ['$', 'curl -sI https://profile.homemartinez.uk | head -1'],
   ['', 'HTTP/2 200'],
   ['$', 'ollama run qwen "explain SecureClient in one line"'],
-  ['', 'One pinned, encrypted client behind 277 endpoints.'],
+  ['', 'One pinned, encrypted client for the whole app.'],
 ];
 
 const C = {
@@ -338,30 +338,30 @@ const C = {
     role: 'Senior iOS Engineer · Mexico — Remote',
     sub: 'I build mission-critical banking apps in Swift — and the networking, security and Apple Pay layers underneath them. Six years in production, with an AI-augmented workflow.',
     cta1: 'Get in touch', cta2: 'See the work', status: 'Swift 6 · strict concurrency',
-    s0: 'years of iOS in banking', s1: 'lines of Swift', s2: 'endpoints served', s3: 'SwiftUI screens', s4: 'repo contributor',
+    s0: 'years of iOS in banking', s1: 'banks', s2: 'Apple Pay provisioning flows', s3: 'Swift version, strict concurrency', s4: 'repo contributor',
     k1: 'Profile',
     profile: 'Senior iOS developer with **6 years** building mission-critical banking apps in Swift. I joined **Intercam Banco** and stayed with the team through its acquisition by **Kapital Bank** in 2025 — architecting the core networking and security layer, leading **Apple Pay** and the anti-fraud hardening.',
     k2: 'Selected work', workA: 'The parts of a bank', workB: 'you never see.',
     work: [
-      { path: '// core/SecureClient', metric: '277', metricLabel: 'endpoints · 622 screens · 17 modules', title: 'Networking & security layer', body: '228 scattered calls across 174 files unified into one HTTP client — RSA encryption with key renegotiation, certificate pinning (16 certs), TTL cache, throttling and in-flight dedup.' },
+      { path: '// core/SecureClient', metric: '1', metricLabel: 'client for the whole app', title: 'Networking & security layer', body: 'Scattered network calls unified into a single, secure HTTP client — encrypted requests, certificate pinning, caching, throttling and request deduplication.' },
       { path: '// wallet/PassKit', metric: '3', metricLabel: 'provisioning flows', title: 'Apple Pay, end to end', body: 'In-app, Wallet and Apple Watch provisioning, with UI and non-UI Issuer Extensions via PassKit.' },
-      { path: '// security/Hardening', metric: '7', metricLabel: 'anti-tampering mechanisms', title: 'Anti-fraud hardening', body: 'Jailbreak, Frida/Substrate injection, anti-debugging, symlink and simulator detection — plus XOR secret obfuscation and screenshot prevention.' },
+      { path: '// security/Hardening', metric: 'RASP', metricLabel: 'runtime protection', title: 'Anti-fraud hardening', body: 'Runtime protections against tampering and fraud on compromised devices, plus safeguards for sensitive data on screen.' },
       { path: '// release/Deploy', metric: '1 cmd', metricLabel: 'down from ~20 manual minutes', title: 'Release engineering', body: 'Deploy to QA, Beta or Production with a single command. Wrote the repo’s first real unit-test suite with Swift Testing.' },
     ],
     k3: 'Experience', expTitle: 'Six years. One team. Two banks.',
     when: 'Jun 2020 — Sep 2026', coNote: 'Acquired Intercam Banco in Aug 2025 · Remote, Mexico',
     tracks: [
       { title: 'Retail mobile banking', meta: 'Jan 2025 — Sep 2026 · SwiftUI · Swift 6', bullets: [
-        { b: 'Top contributor to the iOS monorepo.', r: '1st of 15 devs, ~33% of commits, across ~289,000 lines of Swift in 16 internal modules.' },
+        { b: 'Top contributor to the iOS monorepo.', r: 'Leading contributor among 15 developers on a large, modular Swift codebase.' },
         { b: 'Adopted Swift 6 with strict concurrency.', r: '@MainActor and Sendable throughout, backed by Swift Testing.' },
-        { b: 'Design System 2.0 and Liquid Glass.', r: '56 components, plus iOS 26 Liquid Glass primitives.' },
-        { b: 'Platform work.', r: 'OATH soft-token, CocoaPods → SPM, Firebase/OneSignal, Dynatrace, real-time FX over WebSockets (STOMP), and AI-augmented development with Claude CLI and local Ollama/Qwen skills.' },
+        { b: 'Design System 2.0 and Liquid Glass.', r: 'A shared component library, plus iOS 26 Liquid Glass primitives.' },
+        { b: 'Platform work.', r: 'Soft-token authentication, CocoaPods → SPM, push notifications, observability, real-time FX over WebSockets (STOMP), and AI-augmented development with Claude CLI and local Ollama/Qwen skills.' },
       ] },
       { title: 'Institutional banking — iAutoriza', meta: 'Oct 2020 — Dec 2025 · UIKit · Clean Swift', bullets: [
-        { b: '#1 contributor.', r: '28.5% of 3,639 commits, 1st of 8 devs — a money-desk and treasury authorization app: ~288,000 lines of Swift, 8 modules, 68 releases.' },
-        { b: '~34 end-to-end VIP scenes and 502 Swift files.', r: 'Maintained the shared networking layer across all 8 modules (67% of its commits) with request encryption, biometrics and jailbreak detection.' },
-        { b: 'Storyboards at scale.', r: '194 scenes across 9 storyboards, navigation resolved from Routers (only 7 segues); part of the incremental UIKit → SwiftUI migration.' },
-        { b: 'Tests and integrations.', r: 'Service-layer unit tests (ACH, PosMovil), the full chat module, Applivery, OneSignal and Charts.' },
+        { b: '#1 contributor.', r: 'Leading contributor among 8 developers on a money-desk and treasury authorization app, across dozens of releases.' },
+        { b: 'End-to-end VIP scenes.', r: 'Maintained the shared networking layer across all modules, with request encryption, biometrics and device-integrity checks.' },
+        { b: 'Storyboards at scale.', r: 'Large storyboard-based UI with navigation resolved from Routers; part of the incremental UIKit → SwiftUI migration.' },
+        { b: 'Tests and integrations.', r: 'Service-layer unit tests, the full chat module, and integrations such as Applivery, OneSignal and Charts.' },
       ] },
     ],
     pcTitle: 'Gaming PC Builder', pcWhen: 'Jan 2017 — May 2020',
@@ -381,30 +381,30 @@ const C = {
     role: 'Senior iOS Engineer · México — Remoto',
     sub: 'Construyo apps bancarias de misión crítica en Swift — y las capas de red, seguridad y Apple Pay que las sostienen. Seis años en producción, con un flujo aumentado por IA.',
     cta1: 'Contáctame', cta2: 'Ver proyectos', status: 'Swift 6 · concurrencia estricta',
-    s0: 'años de iOS en banca', s1: 'líneas de Swift', s2: 'endpoints', s3: 'pantallas SwiftUI', s4: 'contribuidor del repo',
+    s0: 'años de iOS en banca', s1: 'bancos', s2: 'flujos de Apple Pay', s3: 'versión de Swift, concurrencia estricta', s4: 'contribuidor del repo',
     k1: 'Perfil',
     profile: 'Desarrollador iOS senior con **6 años** construyendo apps bancarias de misión crítica en Swift. Ingresé a **Intercam Banco** y continué con el equipo tras su adquisición por **Kapital Bank** en 2025 — arquitecturando la capa central de red y seguridad, liderando **Apple Pay** y el hardening anti-fraude.',
     k2: 'Proyectos destacados', workA: 'Las partes de un banco', workB: 'que nunca ves.',
     work: [
-      { path: '// core/SecureClient', metric: '277', metricLabel: 'endpoints · 622 pantallas · 17 módulos', title: 'Capa de red y seguridad', body: '228 llamadas dispersas en 174 archivos unificadas en un único cliente HTTP — cifrado RSA con renegociación de llaves, certificate pinning (16 certificados), caché con TTL, throttling y deduplicación.' },
+      { path: '// core/SecureClient', metric: '1', metricLabel: 'cliente para toda la app', title: 'Capa de red y seguridad', body: 'Llamadas de red dispersas unificadas en un único cliente HTTP seguro — peticiones cifradas, certificate pinning, caché, throttling y deduplicación.' },
       { path: '// wallet/PassKit', metric: '3', metricLabel: 'flujos de provisioning', title: 'Apple Pay de extremo a extremo', body: 'Provisioning in-app, Wallet y Apple Watch, con Issuer Extensions UI y non-UI vía PassKit.' },
-      { path: '// security/Hardening', metric: '7', metricLabel: 'mecanismos anti-tampering', title: 'Hardening anti-fraude', body: 'Detección de jailbreak, inyección Frida/Substrate, anti-debugging, symlinks y simulador — más ofuscación XOR y prevención de capturas.' },
+      { path: '// security/Hardening', metric: 'RASP', metricLabel: 'protección en tiempo de ejecución', title: 'Hardening anti-fraude', body: 'Protecciones en tiempo de ejecución contra manipulación y fraude en dispositivos comprometidos, más resguardo de datos sensibles en pantalla.' },
       { path: '// release/Deploy', metric: '1 cmd', metricLabel: 'de ~20 minutos manuales', title: 'Release engineering', body: 'Deploy a QA, Beta o Producción con un solo comando. Escribí el primer set real de unit tests del repo con Swift Testing.' },
     ],
     k3: 'Experiencia', expTitle: 'Seis años. Un equipo. Dos bancos.',
     when: 'Jun 2020 — Sep 2026', coNote: 'Adquirió Intercam Banco en ago. 2025 · Remoto, México',
     tracks: [
       { title: 'Banca móvil retail', meta: 'Ene 2025 — Sep 2026 · SwiftUI · Swift 6', bullets: [
-        { b: 'Primer contribuidor del monorepo iOS.', r: '1.º de 15 devs, ~33% de los commits, sobre ~289,000 líneas de Swift en 16 módulos internos.' },
+        { b: 'Primer contribuidor del monorepo iOS.', r: 'Principal contribuidor entre 15 devs en una base de código Swift grande y modular.' },
         { b: 'Adopté Swift 6 con concurrencia estricta.', r: '@MainActor y Sendable en todo el código, respaldado con Swift Testing.' },
-        { b: 'Design System 2.0 y Liquid Glass.', r: '56 componentes, más primitivas de Liquid Glass de iOS 26.' },
-        { b: 'Plataforma.', r: 'Soft-token OATH, CocoaPods → SPM, Firebase/OneSignal, Dynatrace, FX en tiempo real vía WebSockets (STOMP) y desarrollo aumentado por IA con Claude CLI y skills propias en Ollama/Qwen.' },
+        { b: 'Design System 2.0 y Liquid Glass.', r: 'Biblioteca de componentes compartidos, más primitivas de Liquid Glass de iOS 26.' },
+        { b: 'Plataforma.', r: 'Autenticación con soft-token, CocoaPods → SPM, notificaciones push, observabilidad, FX en tiempo real vía WebSockets (STOMP) y desarrollo aumentado por IA con Claude CLI y skills propias en Ollama/Qwen.' },
       ] },
       { title: 'Banca institucional — iAutoriza', meta: 'Oct 2020 — Dic 2025 · UIKit · Clean Swift', bullets: [
-        { b: 'Contribuidor #1.', r: '28.5% de 3,639 commits, 1.º de 8 devs — app de autorización de mesa de dinero y tesorería: ~288,000 líneas de Swift, 8 módulos, 68 versiones.' },
-        { b: '~34 escenas VIP completas y 502 archivos Swift.', r: 'Mantuve la capa de red compartida entre los 8 módulos (67% de sus commits) con cifrado de peticiones, biometría y detección de jailbreak.' },
-        { b: 'Storyboards a escala.', r: '194 escenas en 9 storyboards con navegación resuelta desde Routers (solo 7 segues); parte de la migración incremental UIKit → SwiftUI.' },
-        { b: 'Pruebas e integraciones.', r: 'Unit tests de la capa de servicios (ACH, PosMovil), el módulo de chat completo, Applivery, OneSignal y Charts.' },
+        { b: 'Contribuidor #1.', r: 'Principal contribuidor entre 8 devs en una app de autorización de mesa de dinero y tesorería, a lo largo de decenas de versiones.' },
+        { b: 'Escenas VIP de extremo a extremo.', r: 'Mantuve la capa de red compartida entre todos los módulos, con cifrado de peticiones, biometría y verificación de integridad del dispositivo.' },
+        { b: 'Storyboards a escala.', r: 'UI extensa basada en storyboards con navegación resuelta desde Routers; parte de la migración incremental UIKit → SwiftUI.' },
+        { b: 'Pruebas e integraciones.', r: 'Unit tests de la capa de servicios, el módulo de chat completo e integraciones como Applivery, OneSignal y Charts.' },
       ] },
     ],
     pcTitle: 'Técnico de armado de PC Gamer', pcWhen: 'Ene 2017 — May 2020',
